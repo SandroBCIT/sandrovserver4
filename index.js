@@ -4,12 +4,34 @@ const server = require("http").Server();
 var io = require("socket.io")(server);
 
 var allUsers = {};
+var colors = {
+    "frontDoorColor": "#ffffff",
+    "mainFrameColor": "#ffffff",
+    "rearDoorColor": "#ffffff",
+    "rearIndicatorColor": "#ffffff",
+    "sideIndicatorColor": "#ffffff",
+    "rearHandleColor": "#ffffff",
+    "frontHandleColor": "#ffffff",
+    "ventsColor": "#ffffff",
+    "rearTireShadowColor": "#ffffff",
+    "rearHubColor": "#ffffff",
+    "rearTireColor": "#ffffff",
+    "frontTireColor": "#ffffff",
+    "frontHubColor": "#ffffff",
+    "rearWindowColor": "#ffffff",
+    "windowTrimColor": "#ffffff",
+    "mirrorColor": "#ffffff",
+    "headLightsColor": "#ffffff",
+    "tailLightsColor": "#ffffff"
+};
 
 io.on("connection", function(socket){
+    io.emit("initializeColors", colors);
     
-    socket.on("playInstrument", function(data1, data2){
-        socket.broadcast.to(this.myRoom).emit("playInstrument", data1, data2)
-    })
+    socket.on("colorChange", function(data){
+        colors[data.part] = data.color; 
+        io.emit("colorChange", data);
+    });
 });
 
 server.listen(port, (err)=>{
